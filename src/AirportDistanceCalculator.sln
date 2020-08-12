@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30320.27
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirportDistanceCalculator", "AirportDistanceCalculator\AirportDistanceCalculator.csproj", "{FC1E00D1-D85F-4C20-A097-8AA9A3C6619D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{E1CABF22-CC13-4AEB-AEC5-5A2218C199F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{D07D1FDB-D65A-469A-8CED-7E85004EE653}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommonProps", "CommonProps", "{2510C663-878C-4F4A-92AA-C44547885F7C}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		CodeAnalysis\GlobalSuppressions.cs = CodeAnalysis\GlobalSuppressions.cs
+		CodeAnalysis\StyleCop.ruleset = CodeAnalysis\StyleCop.ruleset
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{AE51EBF4-E601-4BFE-A047-B25959ED08EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{D5BE6145-5A10-491B-99B7-7B0388B4DAB2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FC1E00D1-D85F-4C20-A097-8AA9A3C6619D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC1E00D1-D85F-4C20-A097-8AA9A3C6619D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC1E00D1-D85F-4C20-A097-8AA9A3C6619D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC1E00D1-D85F-4C20-A097-8AA9A3C6619D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1CABF22-CC13-4AEB-AEC5-5A2218C199F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1CABF22-CC13-4AEB-AEC5-5A2218C199F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1CABF22-CC13-4AEB-AEC5-5A2218C199F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1CABF22-CC13-4AEB-AEC5-5A2218C199F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D07D1FDB-D65A-469A-8CED-7E85004EE653}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D07D1FDB-D65A-469A-8CED-7E85004EE653}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D07D1FDB-D65A-469A-8CED-7E85004EE653}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D07D1FDB-D65A-469A-8CED-7E85004EE653}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FC1E00D1-D85F-4C20-A097-8AA9A3C6619D} = {D5BE6145-5A10-491B-99B7-7B0388B4DAB2}
+		{E1CABF22-CC13-4AEB-AEC5-5A2218C199F3} = {AE51EBF4-E601-4BFE-A047-B25959ED08EA}
+		{D07D1FDB-D65A-469A-8CED-7E85004EE653} = {AE51EBF4-E601-4BFE-A047-B25959ED08EA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {814BB233-6B3C-456D-8B05-DFA281D3D819}
+	EndGlobalSection
+EndGlobal
