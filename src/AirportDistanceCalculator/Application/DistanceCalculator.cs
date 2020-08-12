@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using AirportDistanceCalculator.Domain.Values;
 
 namespace AirportDistanceCalculator.Application
@@ -16,15 +17,15 @@ namespace AirportDistanceCalculator.Application
 
         /// <summary>Returns the distance (in meters) between airports</summary>
         /// <exception cref="ArgumentOutOfRangeException">If the airport code is unknown or unsupported</exception>
-        public Distance GetDistance(AirportCode from, AirportCode to)
+        public async Task<Distance> GetDistanceAsync(AirportCode from, AirportCode to)
         {
             if (from == to)
             {
                 return Distance.Zero;
             }
 
-            var fromLoc = AirportLocator.GetLocation(from);
-            var toLoc = AirportLocator.GetLocation(to);
+            var fromLoc = await AirportLocator.GetLocationAsync(from).ConfigureAwait(false);
+            var toLoc = await AirportLocator.GetLocationAsync(to).ConfigureAwait(false);
 
             var distanceMeters = Geolocation.GeoCalculator.GetDistance(
                 fromLoc.Latitude, fromLoc.Longitude,

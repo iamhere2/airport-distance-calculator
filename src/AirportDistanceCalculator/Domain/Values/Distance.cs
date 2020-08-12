@@ -37,7 +37,7 @@ namespace AirportDistanceCalculator.Domain.Values
         /// <remarks>
         /// Comparison goes with threshold of <see cref="EqualityThreshold"/>
         /// </remarks>
-        public bool IsZero => Equals(Zero);
+        public bool IsZero() => Equals(Zero);
 
         /// <summary>Returns <c>true</c>, if other Distance equals to this</summary>
         /// <remarks>
@@ -57,6 +57,8 @@ namespace AirportDistanceCalculator.Domain.Values
         private static readonly IDictionary<(DistanceUnit, DistanceUnit), double> ConvertFactors =
             new Dictionary<(DistanceUnit, DistanceUnit), double>
             {
+                // TODO: Do something with low precision of conversions
+
                 [(DistanceUnit.Meters, DistanceUnit.Meters)] = 1.0,
                 [(DistanceUnit.Meters, DistanceUnit.Kilometers)] = 0.001,
                 [(DistanceUnit.Meters, DistanceUnit.Miles)] = 1.0 / 1609.34,

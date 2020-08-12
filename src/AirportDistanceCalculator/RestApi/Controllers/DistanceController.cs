@@ -1,4 +1,7 @@
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
+using AirportDistanceCalculator.Application;
 using AirportDistanceCalculator.Domain.Values;
 using AirportDistanceCalculator.RestApi.Results;
 using Microsoft.AspNetCore.Mvc;
@@ -11,16 +14,30 @@ namespace AirportDistanceCalculator.RestApi.Controllers
     [Route("api/airport-distance")]
     public class DistanceController : ControllerBase
     {
-        /// <summary>Test method</summary>
-        [HttpGet("test")]
-        public string Test(string arg) => arg;
+        private DistanceCalculator DistanceCalculator { get; }
 
-        /// <summary>Test method</summary>
+        /// <summary>Constructor</summary>
+        public DistanceController(DistanceCalculator distanceCalculator)
+        {
+            DistanceCalculator = distanceCalculator ?? throw new ArgumentNullException(nameof(distanceCalculator));
+        }
+
+        /// <summary>Returns distance between airports in miles</summary>
         [HttpGet("miles")]
-        public AirportDistance GetDistanceInMiles([Required] string from, [Required] string to)
-            => new AirportDistance(
-                new AirportCode(from),
-                new AirportCode(to),
-                new Distance(123.0, DistanceUnit.Miles));
+        public Task<AirportDistance> GetDistanceInMiles([Required] string from, [Required] string to)
+            => GetDistanceAsync(from, to, DistanceUnit.Miles);
+
+        /// <summary>Returns distance between airports in kilometers</summary>
+        [HttpGet("kilometers")]
+        public Task<AirportDistance> GetDistanceInKilometers([Required] string from, [Required] string to)
+            => GetDistanceAsync(from, to, DistanceUnit.Kilometers);
+
+        private async Task<AirportDistance> GetDistanceAsync(string from, string to, DistanceUnit unit)
+        {
+            var fromAirportCode = new AirportCode(from);
+            var toAirportCode = new AirportCode(to);
+            var distance = await DistanceCalculator.GetDistanceAsync(fromAirportCode, toAirportCode).ConfigureAwait(false);
+            return new AirportDistance(fromAirportCode, toAirportCode, distance.Convert(unit));
+        }
     }
 }
