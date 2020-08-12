@@ -2,6 +2,9 @@
 2. Info receiving, rest API
 3. Caching
 4. Whistles
-5. Doc
+5. Doc, Swagger, eliminate russian
 6. Integration tests, etc
+Polly? health check with remote service? REST API ARG checks?
+
+
 
