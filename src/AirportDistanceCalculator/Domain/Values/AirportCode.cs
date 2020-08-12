@@ -29,18 +29,18 @@ namespace AirportDistanceCalculator.Domain.Values
         public override bool Equals(object? obj)
             => obj is AirportCode ac && Equals(ac);
 
-        /// Returns <c>true</c>, if other AirportCode equals to this.
+        /// <summary>Returns <c>true</c>, if other AirportCode equals to this.</summary>
         public bool Equals(AirportCode other) =>
             other.Code.Equals(Code, StringComparison.InvariantCulture);
 
         /// <inheritdoc/>
         public override int GetHashCode() => Code.GetHashCode();
 
-        /// Returns <c>true</c>, if other AirportCode equals to this.
+        /// <summary>Returns <c>true</c>, if other AirportCode equals to this.</summary>
         public static bool operator ==(AirportCode left, AirportCode right)
             => left.Equals(right);
 
-        /// Returns <c>true</c>, if other AirportCode differs from this.
+        /// <summary>Returns <c>true</c>, if other AirportCode differs from this.</summary>
         public static bool operator !=(AirportCode left, AirportCode right)
             => !(left == right);
 
