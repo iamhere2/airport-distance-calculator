@@ -71,7 +71,7 @@ namespace AirportDistanceCalculator.RemoteServices
                 else
                 {
                     throw new ApplicationException(
-                        $"Error response from Places service: {response.StatusCode}");
+                        $"Error response from \"places\" service: {response.StatusCode}");
                 }
             }
         }

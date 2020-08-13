@@ -77,8 +77,8 @@ namespace AirportDistanceCalculator.Hosting
             // Enums as string from [EnumMember]
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumMemberConverter());
 
-            // More convenient for disagnostics/debug
-            // TODO: to config
+            // Much more convenient for disagnostics/debug
+            // TODO: get from config
             options.JsonSerializerOptions.WriteIndented = true;
 
             // Usual JSON convention: camelCase
@@ -133,8 +133,8 @@ namespace AirportDistanceCalculator.Hosting
                 serviceProvider
                     .GetRequiredService<IAsyncCacheProvider>()
                     .AsyncFor<JsonDocument>(),
-                // TODO: get from config
-                TimeSpan.FromMinutes(15),
+                // TODO: get from config / from the target service
+                TimeSpan.FromHours(24),
                 (ctx, key, e) => Logger.Error(e, "JsonDocument cache error for key {Key}", key));
 
         private static void AddMemoryCache(IServiceCollection services)
