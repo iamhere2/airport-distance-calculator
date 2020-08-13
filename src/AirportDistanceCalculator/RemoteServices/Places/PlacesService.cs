@@ -4,27 +4,37 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AirportDistanceCalculator.Application;
+using AirportDistanceCalculator.CommonUtils.Http;
 using AirportDistanceCalculator.Domain.Values;
 using Polly;
 using Polly.Caching;
 using Polly.Registry;
+using Serilog;
 
 namespace AirportDistanceCalculator.RemoteServices
 {
-    /// <summary>
-    /// Proxy for remote service https://places-dev.cteleport.com,
-    /// which implements <see cref="IAirportLocator"/>
-    /// </summary>
+    /// <summary>Proxy for remote PlacesService</summary>
     public class PlacesService : IAirportLocator
     {
+        private static readonly ILogger Logger = Log.ForContext<PlacesService>();
+
         /// <summary>Constructor</summary>
         public PlacesService(HttpClient httpClient, IReadOnlyPolicyRegistry<string> policyRegistry)
         {
             HttpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-            PolicyRegistry = policyRegistry ?? throw new ArgumentNullException(nameof(policyRegistry));
+
+            CachePolicy = (policyRegistry ?? throw new ArgumentNullException(nameof(policyRegistry)))
+                .TryGet<AsyncCachePolicy<JsonDocument>>("DefaultJsonCache", out var cachePolicy)
+                    ? cachePolicy
+                    : null;
+
+            if (CachePolicy is null)
+            {
+                Logger.Warning("Cache policy not found, caching is disabled");
+            }
         }
 
-        private IReadOnlyPolicyRegistry<string> PolicyRegistry { get; }
+        private AsyncCachePolicy<JsonDocument>? CachePolicy { get; }
 
         private HttpClient HttpClient { get; }
 
@@ -34,25 +44,22 @@ namespace AirportDistanceCalculator.RemoteServices
 
         private async Task<Location> GetLocationCachedAsync(AirportCode airportCode)
         {
-            var cachePolicy = GetCachePolicyIfDefined();
             var ctx = new Context($"{nameof(GetLocationCachedAsync)}:{airportCode.Code}");
 
-            var getAirportTask = cachePolicy is null
-                ? CallGetAirport(airportCode)
-                : cachePolicy.ExecuteAsync(ctx => CallGetAirport(airportCode), ctx);
+            var getAirportTask = CachePolicy is null
+                ? GetAirportAsync(airportCode)
+                : CachePolicy.ExecuteAsync(ctx => GetAirportAsync(airportCode), ctx);
 
-            return await ProcessGetLocationResponse(await getAirportTask, airportCode);
+            return ParseLocation(await getAirportTask);
         }
 
-        private IAsyncPolicy<HttpResponseMessage>? GetCachePolicyIfDefined()
-            => PolicyRegistry.TryGet<AsyncCachePolicy<HttpResponseMessage>>("DefaultCache", out var policy)
-                ? policy : null;
-
-        private Task<Location> ProcessGetLocationResponse(HttpResponseMessage response, AirportCode airportCode)
+        private async Task<JsonDocument> GetAirportAsync(AirportCode airportCode)
         {
+            using var response = await HttpClient.GetAsync($"/airports/{airportCode.Code}");
+
             if (response.IsSuccessStatusCode)
             {
-                return ParseLocation(response.Content);
+                return await response.GetJson();
             }
             else
             {
@@ -64,19 +71,13 @@ namespace AirportDistanceCalculator.RemoteServices
                 else
                 {
                     throw new ApplicationException(
-                        $"Wrong response from Places service: {response.StatusCode}");
+                        $"Error response from Places service: {response.StatusCode}");
                 }
             }
         }
 
-        private async Task<HttpResponseMessage> CallGetAirport(AirportCode airportCode)
-            => await HttpClient.GetAsync($"/airports/{airportCode.Code}");
-
-        private async Task<Location> ParseLocation(HttpContent content)
+        private Location ParseLocation(JsonDocument json)
         {
-            var stream = await content.ReadAsStreamAsync();
-            stream.Seek(0, System.IO.SeekOrigin.Begin);
-            var json = await JsonDocument.ParseAsync(stream);
             var loc = json.RootElement.GetProperty("location");
             return new Location(loc.GetProperty("lat").GetDouble(), loc.GetProperty("lon").GetDouble());
         }

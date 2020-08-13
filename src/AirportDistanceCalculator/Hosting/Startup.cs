@@ -80,15 +80,15 @@ namespace AirportDistanceCalculator.Hosting
                     client.BaseAddress = new Uri("https://places-dev.cteleport.com/zzz/");
                     client.DefaultRequestHeaders.Add("Accept", "application/json");
                 })
-                .AddPolicyHandlerFromRegistry(PolicyNames.DefaultCache)
                 .AddPolicyHandlerFromRegistry(PolicyNames.DefaultRetry);
             // TODO: .AddPolicyHandler(GetCircuitBreakerPolicy());
+            // TODO: Move policy definition to the service
         }
 
         private class PolicyNames
         {
             internal const string DefaultRetry = nameof(DefaultRetry);
-            internal const string DefaultCache = nameof(DefaultCache);
+            internal const string DefaultJsonCache = nameof(DefaultJsonCache);
         }
 
         private static void AddPolicies(IServiceCollection services)
@@ -97,18 +97,19 @@ namespace AirportDistanceCalculator.Hosting
                 serviceProvider =>
                     new PolicyRegistry
                         {
-                            { PolicyNames.DefaultCache, GetDefaultCachePolicy(serviceProvider) },
+                            { PolicyNames.DefaultJsonCache, GetDefaultCachePolicy(serviceProvider) },
                             { PolicyNames.DefaultRetry, GetDefaultRetryPolicy() }
                         });
         }
 
-        private static AsyncCachePolicy<HttpResponseMessage> GetDefaultCachePolicy(IServiceProvider serviceProvider)
+        private static AsyncCachePolicy<JsonDocument> GetDefaultCachePolicy(IServiceProvider serviceProvider)
             => Policy.CacheAsync(
                 serviceProvider
                     .GetRequiredService<IAsyncCacheProvider>()
-                    .AsyncFor<HttpResponseMessage>(),
+                    .AsyncFor<JsonDocument>(),
+                // TODO: to config
                 TimeSpan.FromMinutes(15),
-                (ctx, key, e) => Logger.Error(e, "Cache error for key {Key}", key));
+                (ctx, key, e) => Logger.Error(e, "JsonDocument cache error for key {Key}", key));
 
         private static void AddMemoryCache(IServiceCollection services)
         {
