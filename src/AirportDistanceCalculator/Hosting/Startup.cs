@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 using AirportDistanceCalculator.Application;
 using AirportDistanceCalculator.RemoteServices;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
@@ -38,26 +38,7 @@ namespace AirportDistanceCalculator.Hosting
         {
             services.AddMvc();
             services.AddHealthChecks();
-
-            services
-                .AddControllers()
-                .AddJsonOptions(o =>
-                {
-                    // Перечисления - строками из [EnumMember]
-                    o.JsonSerializerOptions.Converters.Add(new JsonStringEnumMemberConverter());
-
-                    // Для диагностики и отладки удобнее с отступами, если вдруг это начнет жать - отключить просто
-                    o.JsonSerializerOptions.WriteIndented = true;
-
-                    // Общее соглашение почти везде: camelCase в JSON
-                    o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                    o.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
-
-                    // Еще несколько опций для снижения строгости формата
-                    o.JsonSerializerOptions.AllowTrailingCommas = true;
-                    o.JsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
-                    o.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-                });
+            services.AddControllers().AddJsonOptions(ConfigureControllersJson);
 
             AddMemoryCache(services);
             AddPolicies(services);
@@ -65,6 +46,24 @@ namespace AirportDistanceCalculator.Hosting
             AddApplicationServices(services);
 
             Logger.Debug("Services configured");
+        }
+
+        private static void ConfigureControllersJson(JsonOptions options)
+        {
+            // Перечисления - строками из [EnumMember]
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumMemberConverter());
+
+            // Для диагностики и отладки удобнее с отступами, если вдруг это начнет жать - отключить просто
+            options.JsonSerializerOptions.WriteIndented = true;
+
+            // Общее соглашение почти везде: camelCase в JSON
+            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+
+            // Еще несколько опций для снижения строгости формата
+            options.JsonSerializerOptions.AllowTrailingCommas = true;
+            options.JsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
+            options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
         }
 
         private static void AddApplicationServices(IServiceCollection services)
@@ -78,12 +77,18 @@ namespace AirportDistanceCalculator.Hosting
                 client =>
                 {
                     // TODO: to config
-                    client.BaseAddress = new Uri("https://places-dev1.cteleport.com");
+                    client.BaseAddress = new Uri("https://places-dev.cteleport.com/zzz/");
                     client.DefaultRequestHeaders.Add("Accept", "application/json");
                 })
-                .AddPolicyHandlerFromRegistry("Cache")
-                .AddPolicyHandlerFromRegistry("Retry");
+                .AddPolicyHandlerFromRegistry(PolicyNames.DefaultCache)
+                .AddPolicyHandlerFromRegistry(PolicyNames.DefaultRetry);
             // TODO: .AddPolicyHandler(GetCircuitBreakerPolicy());
+        }
+
+        private class PolicyNames
+        {
+            internal const string DefaultRetry = nameof(DefaultRetry);
+            internal const string DefaultCache = nameof(DefaultCache);
         }
 
         private static void AddPolicies(IServiceCollection services)
@@ -92,15 +97,18 @@ namespace AirportDistanceCalculator.Hosting
                 serviceProvider =>
                     new PolicyRegistry
                         {
-                            { "Cache", GetCachePolicy(serviceProvider) },
-                            { "Retry", GetRetryPolicy() }
+                            { PolicyNames.DefaultCache, GetDefaultCachePolicy(serviceProvider) },
+                            { PolicyNames.DefaultRetry, GetDefaultRetryPolicy() }
                         });
         }
 
-        private static AsyncCachePolicy<HttpResponseMessage> GetCachePolicy(IServiceProvider serviceProvider)
+        private static AsyncCachePolicy<HttpResponseMessage> GetDefaultCachePolicy(IServiceProvider serviceProvider)
             => Policy.CacheAsync(
-                serviceProvider.GetRequiredService<IAsyncCacheProvider>().AsyncFor<HttpResponseMessage>(),
-                TimeSpan.FromMinutes(15));
+                serviceProvider
+                    .GetRequiredService<IAsyncCacheProvider>()
+                    .AsyncFor<HttpResponseMessage>(),
+                TimeSpan.FromMinutes(15),
+                (ctx, key, e) => Logger.Error(e, "Cache error for key {Key}", key));
 
         private static void AddMemoryCache(IServiceCollection services)
         {
@@ -108,12 +116,15 @@ namespace AirportDistanceCalculator.Hosting
             services.AddSingleton<IAsyncCacheProvider, MemoryCacheProvider>();
         }
 
-        private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        private static IAsyncPolicy<HttpResponseMessage> GetDefaultRetryPolicy()
             => HttpPolicyExtensions
                 .HandleTransientHttpError()
                 .OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound)
-                .WaitAndRetryAsync(3,
-                attempt => attempt == 1 ? TimeSpan.Zero : TimeSpan.FromSeconds(Math.Pow(2, attempt - 1)));
+                .WaitAndRetryAsync(
+                    3,
+                    attempt => attempt == 1
+                        ? TimeSpan.Zero
+                        : TimeSpan.FromSeconds(1 << (attempt - 1)));
 
         /// <summary>Configures ASP.NET Core request processing pipeline</summary>
         public void Configure(IApplicationBuilder app)

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AirportDistanceCalculator.Application;
 using AirportDistanceCalculator.Domain.Values;
 using AirportDistanceCalculator.RemoteServices;
+using Polly.Registry;
 using Xunit;
 
 namespace IntegrationTests
@@ -21,7 +22,7 @@ namespace IntegrationTests
                 BaseAddress = new Uri("https://places-dev.cteleport.com")
             };
 
-            IAirportLocator locator = new PlacesService(httpClient);
+            IAirportLocator locator = new PlacesService(httpClient, new PolicyRegistry());
             var airportCode = new AirportCode(code);
 
             // Act

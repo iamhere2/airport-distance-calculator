@@ -1,0 +1,62 @@
+{
+	"info": {
+		"_postman_id": "b0713453-7fa0-44ab-a3a1-a6e68b44673e",
+		"name": "C Teleport",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Airport distance",
+			"item": [
+				{
+					"name": "Get distance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{AirportDistanceCalculator}}/api/airport-distance/miles?from=AMS&to=MSK",
+							"host": [
+								"{{AirportDistanceCalculator}}"
+							],
+							"path": [
+								"api",
+								"airport-distance",
+								"miles"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "AMS"
+								},
+								{
+									"key": "to",
+									"value": "MSK"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Health check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{AirportDistanceCalculator}}/health-check",
+							"host": [
+								"{{AirportDistanceCalculator}}"
+							],
+							"path": [
+								"health-check"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
