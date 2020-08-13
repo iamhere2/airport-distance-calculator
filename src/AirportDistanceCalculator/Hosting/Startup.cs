@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -34,6 +35,7 @@ namespace AirportDistanceCalculator.Hosting
 
         /// <summary>Initializes IoC-container with services</summary>
         /// <remarks>Called by ASP.NET Core infrastructure</remarks>
+        [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Called by convention")]
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
@@ -130,6 +132,7 @@ namespace AirportDistanceCalculator.Hosting
                         : TimeSpan.FromSeconds(1 << (attempt - 1)));
 
         /// <summary>Configures ASP.NET Core request processing pipeline</summary>
+        [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Called by convention")]
         public void Configure(IApplicationBuilder app)
         {
             app.UseRouting();
