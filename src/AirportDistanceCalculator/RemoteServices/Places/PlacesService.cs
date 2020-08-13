@@ -25,11 +25,11 @@ namespace AirportDistanceCalculator.RemoteServices
         /// <inheritdoc/>
         async Task<Location> IAirportLocator.GetLocationAsync(AirportCode airportCode)
         {
-            var response = await HttpClient.GetAsync($"/airports/{airportCode.Code}").ConfigureAwait(false);
+            var response = await HttpClient.GetAsync($"/airports/{airportCode.Code}");
 
             if (response.IsSuccessStatusCode)
             {
-                return await ParseLocation(response.Content).ConfigureAwait(false);
+                return await ParseLocation(response.Content);
             }
             else
             {
@@ -46,8 +46,8 @@ namespace AirportDistanceCalculator.RemoteServices
 
         private async Task<Location> ParseLocation(HttpContent content)
         {
-            using var stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
-            var json = await JsonDocument.ParseAsync(stream).ConfigureAwait(false);
+            using var stream = await content.ReadAsStreamAsync();
+            var json = await JsonDocument.ParseAsync(stream);
             var loc = json.RootElement.GetProperty("location");
             return new Location(loc.GetProperty("lat").GetDouble(), loc.GetProperty("lon").GetDouble());
         }

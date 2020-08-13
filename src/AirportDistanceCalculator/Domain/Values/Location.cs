@@ -54,5 +54,9 @@ namespace AirportDistanceCalculator.Domain.Values
 
         /// <inheritdoc/>
         public override string ToString() => $"(Lt: {Latitude}; Lg: {Longitude})";
+
+        /// <summary>The same as <see cref="Distance.Between(Location, Location)"/></summary>
+        public static Distance operator -(Location a, Location b)
+            => Distance.Between(a, b);
     }
 }

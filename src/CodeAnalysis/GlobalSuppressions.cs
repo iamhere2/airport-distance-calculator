@@ -41,3 +41,7 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "IDE0063:Use simple 'using' statement",
     Justification = "Иногда хочется показать scope using'а явно",
     Scope = "module")]
+
+[assembly: SuppressMessage("Reliability", "CA2007:Consider calling ConfigureAwait on the awaited task",
+    Justification = "That's not necessary in ASP.NET Core, which doesn't set up an own SynchronizationContext",
+    Scope = "module")]

@@ -36,7 +36,7 @@ namespace AirportDistanceCalculator.RestApi.Controllers
         {
             var fromAirportCode = new AirportCode(from);
             var toAirportCode = new AirportCode(to);
-            var distance = await DistanceCalculator.GetDistanceAsync(fromAirportCode, toAirportCode).ConfigureAwait(false);
+            var distance = await DistanceCalculator.GetDistanceAsync(fromAirportCode, toAirportCode);
             return new AirportDistance(fromAirportCode, toAirportCode, distance.Convert(unit));
         }
     }

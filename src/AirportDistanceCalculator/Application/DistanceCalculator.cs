@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using AirportDistanceCalculator.CommonUtils.Tasks;
 using AirportDistanceCalculator.Domain.Values;
 
 namespace AirportDistanceCalculator.Application
@@ -24,16 +25,9 @@ namespace AirportDistanceCalculator.Application
                 return Distance.Zero;
             }
 
-            var fromLoc = await AirportLocator.GetLocationAsync(from).ConfigureAwait(false);
-            var toLoc = await AirportLocator.GetLocationAsync(to).ConfigureAwait(false);
+            var (fromLoc, toLoc) = await (AirportLocator.GetLocationAsync(from), AirportLocator.GetLocationAsync(to)).WhenAll();
 
-            var distanceMeters = Geolocation.GeoCalculator.GetDistance(
-                fromLoc.Latitude, fromLoc.Longitude,
-                toLoc.Latitude, toLoc.Longitude,
-                decimalPlaces: 10,
-                Geolocation.DistanceUnit.Meters);
-
-            return new Distance(distanceMeters, DistanceUnit.Meters);
+            return fromLoc - toLoc;
         }
     }
 }

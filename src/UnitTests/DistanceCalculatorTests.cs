@@ -10,9 +10,9 @@ namespace UnitTests
     public class DistanceCalculatorTests
     {
         [Fact]
-        public async void The_same_airport_is_at_zero_distance_without_external_calls()
+        public async Task The_same_airport_is_at_zero_distance_without_external_calls()
         {
-            // Assert
+            // Arrange
 
             var locatorMock = new Mock<IAirportLocator>(MockBehavior.Strict);
             locatorMock
@@ -24,7 +24,7 @@ namespace UnitTests
             // Act
 
             var distance = await calculator.GetDistanceAsync(
-                new AirportCode("ABC"), new AirportCode("ABC")).ConfigureAwait(false);
+                new AirportCode("ABC"), new AirportCode("ABC"));
 
             // Assert
 
@@ -32,26 +32,26 @@ namespace UnitTests
         }
 
         [Fact]
-        public async void Calculates_distance_for_some_locations()
+        public async Task Calculates_distance_for_some_locations()
         {
-            // Assert
+            // Arrange
 
             var locatorMock = new Mock<IAirportLocator>(MockBehavior.Strict);
 
             locatorMock
                 .Setup(l => l.GetLocationAsync(new AirportCode("DME")))
-                .Returns(Task.FromResult(new Location(55.414566, 37.899494)));
+                .ReturnsAsync(new Location(55.414566, 37.899494));
 
             locatorMock
                 .Setup(l => l.GetLocationAsync(new AirportCode("JFK")))
-                .Returns(Task.FromResult(new Location(40.642335, -73.78817)));
+                .ReturnsAsync(new Location(40.642335, -73.78817));
 
             var calculator = new DistanceCalculator(locatorMock.Object);
 
             // Act
 
             var distance = await calculator.GetDistanceAsync(
-                new AirportCode("DME"), new AirportCode("JFK")).ConfigureAwait(false);
+                new AirportCode("DME"), new AirportCode("JFK"));
 
             // Assert
 
