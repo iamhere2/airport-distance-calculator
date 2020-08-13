@@ -25,7 +25,12 @@ namespace AirportDistanceCalculator.Application
                 return Distance.Zero;
             }
 
-            var (fromLoc, toLoc) = await (AirportLocator.GetLocationAsync(from), AirportLocator.GetLocationAsync(to)).WhenAll();
+            var (fromLoc, toLoc) = await
+                (
+                    AirportLocator.GetLocationAsync(from),
+                    AirportLocator.GetLocationAsync(to)
+                )
+                .WhenAll();
 
             return fromLoc - toLoc;
         }

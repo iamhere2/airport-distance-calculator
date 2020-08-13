@@ -4,10 +4,12 @@ using System.Text.RegularExpressions;
 
 namespace AirportDistanceCalculator.Domain.Values
 {
-    /// <summary>International airport code</summary>
+    /// <summary>International airport code (IATA)</summary>
     [DebuggerDisplay("{ToString()}")]
     public readonly struct AirportCode : IEquatable<AirportCode>
     {
+        // TODO: Consider using reference data file for the exhaustive list of IATA codes (pros, cons)
+
         private static readonly Regex CodeRegex = new Regex("^[A-Z]{3}$", RegexOptions.Compiled);
 
         /// <summary>Constructor</summary>
@@ -22,7 +24,7 @@ namespace AirportDistanceCalculator.Domain.Values
             Code = code;
         }
 
-        /// <summary>International three-letter code</summary>
+        /// <summary>International three-letter code (IATA)</summary>
         public string Code { get; }
 
         /// <inheritdoc/>
