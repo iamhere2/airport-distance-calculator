@@ -57,7 +57,7 @@ namespace UnitTests
 
             Assert.Equal(DistanceUnit.Meters, distance.Units);
             Assert.Equal(7544373.408, distance.Value, 3);
-            Assert.True(distance == new Distance(4687.867950, DistanceUnit.Miles));
+            Assert.Equal(new Distance(4687.867950, DistanceUnit.Miles), distance);
         }
     }
 }

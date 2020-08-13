@@ -8,7 +8,7 @@ namespace UnitTests
         [Theory]
         [MemberData(nameof(EqualZeroValues))]
         public void Zero_distances_are_equal_to_each_other(Distance a, Distance b)
-            => Assert.True(a == b, $"{a} != {b}");
+            => Assert.Equal(a, b);
 
         public static readonly object[] EqualZeroValues =
             new object[]
@@ -22,7 +22,7 @@ namespace UnitTests
         [Theory]
         [MemberData(nameof(EqualNonZeroValues))]
         public void Non_zero_distances_are_equal_to_each_other(Distance a, Distance b)
-            => Assert.True(a == b, $"{a} != {b}");
+            => Assert.Equal(a, b);
 
         public static readonly object[] EqualNonZeroValues =
             new object[]
