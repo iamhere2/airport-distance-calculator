@@ -13,6 +13,7 @@ namespace AirportDistanceCalculator.Domain.Values
         private static readonly Regex CodeRegex = new Regex("^[A-Z]{3}$", RegexOptions.Compiled);
 
         /// <summary>Constructor</summary>
+        /// <exception cref="ArgumentOutOfRangeException">If the airport code is unknown or unsupported</exception>
         public AirportCode(string code)
         {
             if (!CodeRegex.IsMatch(code))

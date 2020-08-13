@@ -13,7 +13,7 @@ using Serilog;
 
 namespace AirportDistanceCalculator.RemoteServices
 {
-    /// <summary>Proxy for remote PlacesService</summary>
+    /// <summary>Proxy for remote "places" service</summary>
     public class PlacesService : IAirportLocator
     {
         private static readonly ILogger Logger = Log.ForContext<PlacesService>();

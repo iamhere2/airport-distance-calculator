@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using Polly;
 using Polly.Caching;
 using Polly.Caching.Memory;
@@ -42,12 +44,32 @@ namespace AirportDistanceCalculator.Hosting
             services.AddHealthChecks();
             services.AddControllers().AddJsonOptions(ConfigureControllersJson);
 
+            AddSwagger(services);
             AddMemoryCache(services);
             AddPolicies(services);
             AddHttpClients(services);
             AddApplicationServices(services);
 
             Logger.Debug("Services configured");
+        }
+
+        private static void AddSwagger(IServiceCollection services)
+        {
+            services.AddSwaggerGen(o =>
+            {
+                o.SwaggerDoc(
+                    name: "v1",
+                    new OpenApiInfo
+                    {
+                        Title = $"Airport distance API",
+                        Version = "v1"
+                    });
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlDocFileName = $"{typeof(Startup).Assembly.GetName().Name}.xml";
+                var xmlDocFullPath = Path.Combine(AppContext.BaseDirectory, xmlDocFileName);
+                o.IncludeXmlComments(xmlDocFullPath, includeControllerXmlComments: true);
+            });
         }
 
         private static void ConfigureControllersJson(JsonOptions options)
@@ -135,12 +157,25 @@ namespace AirportDistanceCalculator.Hosting
         [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Called by convention")]
         public void Configure(IApplicationBuilder app)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(o =>
+            {
+                o.SwaggerEndpoint(
+                    url: "/swagger/v1/swagger.json",
+                    name: $"Airport distance API v1");
+
+                o.EnableDeepLinking();
+
+                Logger.Information("Swagger UI configured at /swagger path");
+            });
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health-check");
+                endpoints.MapSwagger();
             });
 
             Logger.Debug("ASP.NET Core request pipeline configured");
