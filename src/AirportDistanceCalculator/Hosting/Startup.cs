@@ -50,17 +50,18 @@ namespace AirportDistanceCalculator.Hosting
 
         private static void ConfigureControllersJson(JsonOptions options)
         {
-            // Перечисления - строками из [EnumMember]
+            // Enums as string from [EnumMember]
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumMemberConverter());
 
-            // Для диагностики и отладки удобнее с отступами, если вдруг это начнет жать - отключить просто
+            // More convenient for disagnostics/debug
+            // TODO: to config
             options.JsonSerializerOptions.WriteIndented = true;
 
-            // Общее соглашение почти везде: camelCase в JSON
+            // Usual JSON convention: camelCase
             options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
 
-            // Еще несколько опций для снижения строгости формата
+            // Some options for less restrictive parsing
             options.JsonSerializerOptions.AllowTrailingCommas = true;
             options.JsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Skip;
             options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
@@ -76,13 +77,14 @@ namespace AirportDistanceCalculator.Hosting
             services.AddHttpClient<IAirportLocator, PlacesService>(
                 client =>
                 {
-                    // TODO: to config
+                    // TODO: get from config
                     client.BaseAddress = new Uri("https://places-dev.cteleport.com/zzz/");
                     client.DefaultRequestHeaders.Add("Accept", "application/json");
                 })
                 .AddPolicyHandlerFromRegistry(PolicyNames.DefaultRetry);
             // TODO: .AddPolicyHandler(GetCircuitBreakerPolicy());
             // TODO: Move policy definition to the service
+            // TODO: Consider developing non-default policy for returning last good value from cache if the response is error (see https://github.com/App-vNext/Polly/issues/648)
         }
 
         private class PolicyNames
@@ -107,7 +109,7 @@ namespace AirportDistanceCalculator.Hosting
                 serviceProvider
                     .GetRequiredService<IAsyncCacheProvider>()
                     .AsyncFor<JsonDocument>(),
-                // TODO: to config
+                // TODO: get from config
                 TimeSpan.FromMinutes(15),
                 (ctx, key, e) => Logger.Error(e, "JsonDocument cache error for key {Key}", key));
 
