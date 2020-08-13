@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using AirportDistanceCalculator.CommonUtils.Tasks;
 using AirportDistanceCalculator.Domain.Values;
+using AirportDistanceCalculator.Domain.Values.Exceptions;
 
 namespace AirportDistanceCalculator.Application
 {
@@ -17,7 +18,7 @@ namespace AirportDistanceCalculator.Application
         private IAirportLocator AirportLocator { get; }
 
         /// <summary>Returns the distance (in meters) between airports</summary>
-        /// <exception cref="ArgumentOutOfRangeException">If the airport code is unknown or unsupported</exception>
+        /// <exception cref="AirportCodeException">If the airport code is unknown or unsupported</exception>
         public async Task<Distance> GetDistanceAsync(AirportCode from, AirportCode to)
         {
             if (from == to)

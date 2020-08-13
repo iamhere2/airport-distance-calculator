@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using AirportDistanceCalculator.Domain.Values.Exceptions;
 
 namespace AirportDistanceCalculator.Domain.Values
 {
@@ -13,13 +14,12 @@ namespace AirportDistanceCalculator.Domain.Values
         private static readonly Regex CodeRegex = new Regex("^[A-Z]{3}$", RegexOptions.Compiled);
 
         /// <summary>Constructor</summary>
-        /// <exception cref="ArgumentOutOfRangeException">If the airport code is unknown or unsupported</exception>
+        /// <exception cref="AirportCodeException">If the airport code is unknown or unsupported</exception>
         public AirportCode(string code)
         {
             if (!CodeRegex.IsMatch(code))
             {
-                throw new ArgumentOutOfRangeException(nameof(code), code,
-                    "Airport code can have only three upper-case latin letters");
+                throw new AirportCodeException(code);
             }
 
             Code = code;

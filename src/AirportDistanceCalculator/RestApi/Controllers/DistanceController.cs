@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using AirportDistanceCalculator.Application;
 using AirportDistanceCalculator.Domain.Values;
+using AirportDistanceCalculator.Domain.Values.Exceptions;
 using AirportDistanceCalculator.RestApi.Results;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -45,7 +46,7 @@ namespace AirportDistanceCalculator.RestApi.Controllers
                 var distance = await DistanceCalculator.GetDistanceAsync(fromAirportCode, toAirportCode);
                 return new AirportDistance(fromAirportCode, toAirportCode, distance.Convert(unit));
             }
-            catch (ArgumentOutOfRangeException e)
+            catch (AirportCodeException e)
             {
                 Logger.Error(e, "Error while calculating airport distance {From} - {To}", from, to);
                 return BadRequest(new { message = e.Message });

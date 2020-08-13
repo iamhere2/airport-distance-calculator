@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AirportDistanceCalculator.Application;
 using AirportDistanceCalculator.CommonUtils.Http;
 using AirportDistanceCalculator.Domain.Values;
+using AirportDistanceCalculator.Domain.Values.Exceptions;
 using Polly;
 using Polly.Caching;
 using Polly.Registry;
@@ -65,8 +66,7 @@ namespace AirportDistanceCalculator.RemoteServices
             {
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
-                    throw new ArgumentOutOfRangeException(
-                        $"Airport code is unknown or unsupported: {airportCode}");
+                    throw new AirportCodeException(airportCode.Code);
                 }
                 else
                 {
