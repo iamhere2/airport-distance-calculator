@@ -78,11 +78,11 @@ namespace AirportDistanceCalculator.Hosting
                 client =>
                 {
                     // TODO: to config
-                    client.BaseAddress = new Uri("https://places-dev.cteleport.com");
+                    client.BaseAddress = new Uri("https://places-dev1.cteleport.com");
                     client.DefaultRequestHeaders.Add("Accept", "application/json");
                 })
                 .AddPolicyHandlerFromRegistry("Cache")
-                .AddPolicyHandler(GetRetryPolicy());
+                .AddPolicyHandlerFromRegistry("Retry");
             // TODO: .AddPolicyHandler(GetCircuitBreakerPolicy());
         }
 
@@ -92,16 +92,15 @@ namespace AirportDistanceCalculator.Hosting
                 serviceProvider =>
                     new PolicyRegistry
                         {
-                            {
-                                "Cache",
-                                Policy.CacheAsync(
-                                    serviceProvider
-                                        .GetRequiredService<IAsyncCacheProvider>()
-                                        .AsyncFor<HttpResponseMessage>(),
-                                    TimeSpan.FromMinutes(15))
-                            }
+                            { "Cache", GetCachePolicy(serviceProvider) },
+                            { "Retry", GetRetryPolicy() }
                         });
         }
+
+        private static AsyncCachePolicy<HttpResponseMessage> GetCachePolicy(IServiceProvider serviceProvider)
+            => Policy.CacheAsync(
+                serviceProvider.GetRequiredService<IAsyncCacheProvider>().AsyncFor<HttpResponseMessage>(),
+                TimeSpan.FromMinutes(15));
 
         private static void AddMemoryCache(IServiceCollection services)
         {
@@ -113,10 +112,11 @@ namespace AirportDistanceCalculator.Hosting
             => HttpPolicyExtensions
                 .HandleTransientHttpError()
                 .OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound)
-                .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+                .WaitAndRetryAsync(3,
+                attempt => attempt == 1 ? TimeSpan.Zero : TimeSpan.FromSeconds(Math.Pow(2, attempt - 1)));
 
         /// <summary>Configures ASP.NET Core request processing pipeline</summary>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
             app.UseRouting();
 
