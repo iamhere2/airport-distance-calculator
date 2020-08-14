@@ -17,6 +17,8 @@ Calculates a distance between airports by their three-letter codes
 * Rest API Doc: Swashbuckle
 * "Geolocation" library: fairly large community usage, looks simple and enough, the task is quite simple and there are no need to invent wheel here.  MIT License. If for any reason we have do give up this library, ti would be trivial to replace it with the same functionality and naming. But Coordinate is mutable struct :(
   * Alternative "CoordinateSharp" - overcomplicated, and published under AGPL.
+* Polly
+* Macros.Json.Extensions
 
 ## Project structure
 * Assemblies: just one for that small service. 
