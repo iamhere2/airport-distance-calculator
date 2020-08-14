@@ -13,8 +13,8 @@ namespace UnitTests
         public static readonly object[] EqualZeroValues =
             new object[]
             {
-                new object[] { Distance.Zero, Distance.Zero }, xxx
-                new object[] { Distance.Zero, new Distance(0.1, DistanceUnit.Meters) },
+                new object[] { Distance.Zero, Distance.Zero },
+                new object[] { Distance.Zero, new Distance(0.0, DistanceUnit.Meters) },
                 new object[] { Distance.Zero, new Distance(0.0, DistanceUnit.Miles) },
                 new object[] { Distance.Zero, new Distance(0.0, DistanceUnit.Kilometers) },
             };
