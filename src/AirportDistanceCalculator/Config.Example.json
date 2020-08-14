@@ -1,0 +1,28 @@
+{
+    // This is an example configuration file
+    // Should be renamed to just "Config.json" to be regarded
+
+    // Logging
+    "Serilog": {
+        "MinimumLevel": {
+
+            "Default": "Information",
+
+            "Override": {
+                "Microsoft.EntityFrameworkCore": "Warning",
+                "Microsoft.EntityFrameworkCore.Database.Command": "Information",
+                "Microsoft.AspNetCore": "Warning",
+                "Microsoft.AspNetCore.Hosting.Internal.WebHost": "Warning",
+            }
+        },
+        "WriteTo": [
+            {
+                "Name": "Console",
+                "Args": {
+                    "theme": "Serilog.Sinks.SystemConsole.Themes.AnsiConsoleTheme::Code, Serilog.Sinks.Console",
+                    "outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
+                }
+            }
+        ]
+    }
+}

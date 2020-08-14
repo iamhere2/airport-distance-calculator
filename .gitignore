@@ -24,3 +24,4 @@ bin/
 Bin/
 obj/
 Obj/
+/src/AirportDistanceCalculator/Config.json

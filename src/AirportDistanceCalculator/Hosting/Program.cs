@@ -1,6 +1,8 @@
 using System;
 using CTeleport.AirportDistanceCalculator.Hosting;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
@@ -17,7 +19,7 @@ namespace CTeleport.AirportDistanceCalculator
             try
             {
                 AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
-                ConfigureLogging();
+                ConfigureInitialLogging();
                 RunHost(args);
             }
             catch (Exception ex)
@@ -33,14 +35,14 @@ namespace CTeleport.AirportDistanceCalculator
             Console.WriteLine($"Process shut down gracefully");
         }
 
-        private static void ConfigureLogging()
+        private static void ConfigureInitialLogging()
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.Console()
                 .CreateLogger();
 
-            Log.Logger.Debug("Logging configured");
+            Log.Logger.Debug("Initial logging configured");
         }
 
         private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -78,6 +80,8 @@ namespace CTeleport.AirportDistanceCalculator
             .Build()
             .Run();
 
+        private const string SerilogConfigurationSectionName = "Serilog";
+
         /// <summary>Creates instance of <see cref="IHostBuilder"/></summary>
         /// <remarks>
         /// Can be called directly by dotnet tools.
@@ -85,7 +89,27 @@ namespace CTeleport.AirportDistanceCalculator
         public static IHostBuilder CreateHostBuilder(string[] args)
             => Host
                 .CreateDefaultBuilder(args)
-                .UseSerilog()
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.AddJsonFile("Config.json",
+                        optional: false,
+                        reloadOnChange: true);
+                })
+                .UseSerilog((ctx, sp, loggingConfiguration) =>
+                {
+                    var configuration = sp.GetRequiredService<IConfiguration>();
+                    if (configuration.GetSection(SerilogConfigurationSectionName).Exists())
+                    {
+                        loggingConfiguration.ReadFrom.Configuration(configuration, SerilogConfigurationSectionName);
+                        Log.Logger.Information("Logging has finally configured from general configuration source");
+                    }
+                    else
+                    {
+                        Log.Logger.Warning(
+                            "Configuration section for Serilog (\"{SerilogConfigurationSectionName}\") was not found",
+                            SerilogConfigurationSectionName);
+                    }
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

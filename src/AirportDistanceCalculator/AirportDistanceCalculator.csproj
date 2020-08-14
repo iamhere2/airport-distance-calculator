@@ -21,4 +21,10 @@
     <Folder Include="RemoteServices\Places\Results\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
