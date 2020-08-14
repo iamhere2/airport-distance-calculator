@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace AirportDistanceCalculator.CommonUtils.Http
+namespace CTeleport.AirportDistanceCalculator.CommonUtils.Http
 {
     /// <summary>Provides extension methods for <see cref="HttpResponseMessage"/></summary>
     public static class HttpResponseMessageExtensions

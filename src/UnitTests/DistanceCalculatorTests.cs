@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using AirportDistanceCalculator.Application;
-using AirportDistanceCalculator.Domain.Values;
+using CTeleport.AirportDistanceCalculator.Application;
+using CTeleport.AirportDistanceCalculator.Domain.Values;
 using Moq;
 using Xunit;
 

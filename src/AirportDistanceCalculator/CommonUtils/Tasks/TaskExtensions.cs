@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
-namespace AirportDistanceCalculator.CommonUtils.Tasks
+namespace CTeleport.AirportDistanceCalculator.CommonUtils.Tasks
 {
     /// <summary>Some extension methods for <see cref="Task"/></summary>
     public static class TaskExtensions

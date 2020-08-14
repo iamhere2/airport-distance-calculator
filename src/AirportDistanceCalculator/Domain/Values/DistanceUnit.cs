@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace AirportDistanceCalculator.Domain.Values
+namespace CTeleport.AirportDistanceCalculator.Domain.Values
 {
     /// <summary>Enum of distance units</summary>
     public enum DistanceUnit

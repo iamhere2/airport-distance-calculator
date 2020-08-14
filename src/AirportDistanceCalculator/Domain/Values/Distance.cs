@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-namespace AirportDistanceCalculator.Domain.Values
+namespace CTeleport.AirportDistanceCalculator.Domain.Values
 {
     /// <summary>Distance between two points</summary>
     [DebuggerDisplay("{ToString()}")]

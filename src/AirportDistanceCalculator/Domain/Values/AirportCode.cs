@@ -1,9 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-using AirportDistanceCalculator.Domain.Values.Exceptions;
 
-namespace AirportDistanceCalculator.Domain.Values
+namespace CTeleport.AirportDistanceCalculator.Domain.Values
 {
     /// <summary>International airport code (IATA)</summary>
     [DebuggerDisplay("{ToString()}")]

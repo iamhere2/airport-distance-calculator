@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace AirportDistanceCalculator.Domain.Values.Exceptions
+namespace CTeleport.AirportDistanceCalculator.Domain.Values
 {
     /// <summary>Exception for wrong airport codes</summary>
     public class AirportCodeException : ApplicationException

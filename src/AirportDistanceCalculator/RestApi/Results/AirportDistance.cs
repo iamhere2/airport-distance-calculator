@@ -1,6 +1,6 @@
-using AirportDistanceCalculator.Domain.Values;
+using CTeleport.AirportDistanceCalculator.Domain.Values;
 
-namespace AirportDistanceCalculator.RestApi.Results
+namespace CTeleport.AirportDistanceCalculator.RestApi.Results
 {
     /// <summary>Distance between two airports</summary>
     public readonly struct AirportDistance

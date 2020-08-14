@@ -5,8 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using AirportDistanceCalculator.Application;
-using AirportDistanceCalculator.RemoteServices;
+using CTeleport.AirportDistanceCalculator.Application;
+using CTeleport.AirportDistanceCalculator.RemoteServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +19,7 @@ using Polly.Extensions.Http;
 using Polly.Registry;
 using Serilog;
 
-namespace AirportDistanceCalculator.Hosting
+namespace CTeleport.AirportDistanceCalculator.Hosting
 {
     /// <summary>ASP.NET Core application configurator</summary>
     public class Startup

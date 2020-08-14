@@ -1,14 +1,13 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using AirportDistanceCalculator.Application;
-using AirportDistanceCalculator.Domain.Values;
-using AirportDistanceCalculator.Domain.Values.Exceptions;
-using AirportDistanceCalculator.RestApi.Results;
+using CTeleport.AirportDistanceCalculator.Application;
+using CTeleport.AirportDistanceCalculator.Domain.Values;
+using CTeleport.AirportDistanceCalculator.RestApi.Results;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
-namespace AirportDistanceCalculator.RestApi.Controllers
+namespace CTeleport.AirportDistanceCalculator.RestApi.Controllers
 {
     /// <summary>REST API controller for distance calculation</summary>
     [ApiController]

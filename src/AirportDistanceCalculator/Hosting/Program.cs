@@ -1,10 +1,10 @@
 using System;
-using AirportDistanceCalculator.Hosting;
+using CTeleport.AirportDistanceCalculator.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace AirportDistanceCalculator
+namespace CTeleport.AirportDistanceCalculator
 {
     /// <summary>Process entry points</summary>
     public static class Program

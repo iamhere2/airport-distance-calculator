@@ -1,8 +1,7 @@
 using System.Threading.Tasks;
-using AirportDistanceCalculator.Domain.Values;
-using AirportDistanceCalculator.Domain.Values.Exceptions;
+using CTeleport.AirportDistanceCalculator.Domain.Values;
 
-namespace AirportDistanceCalculator.Application
+namespace CTeleport.AirportDistanceCalculator.Application
 {
     /// <summary>Interface of airport location service</summary>
     public interface IAirportLocator

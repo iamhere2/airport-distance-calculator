@@ -3,16 +3,15 @@ using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using AirportDistanceCalculator.Application;
-using AirportDistanceCalculator.CommonUtils.Http;
-using AirportDistanceCalculator.Domain.Values;
-using AirportDistanceCalculator.Domain.Values.Exceptions;
+using CTeleport.AirportDistanceCalculator.Application;
+using CTeleport.AirportDistanceCalculator.CommonUtils.Http;
+using CTeleport.AirportDistanceCalculator.Domain.Values;
 using Polly;
 using Polly.Caching;
 using Polly.Registry;
 using Serilog;
 
-namespace AirportDistanceCalculator.RemoteServices
+namespace CTeleport.AirportDistanceCalculator.RemoteServices
 {
     /// <summary>Proxy for remote "places" service</summary>
     public class PlacesService : IAirportLocator

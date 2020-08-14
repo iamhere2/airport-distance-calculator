@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace AirportDistanceCalculator.Domain.Values
+namespace CTeleport.AirportDistanceCalculator.Domain.Values
 {
     /// <summary>Geographical location of some point</summary>
     [DebuggerDisplay("{ToString()}")]

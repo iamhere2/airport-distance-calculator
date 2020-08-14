@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using AirportDistanceCalculator.CommonUtils.Tasks;
-using AirportDistanceCalculator.Domain.Values;
-using AirportDistanceCalculator.Domain.Values.Exceptions;
+using CTeleport.AirportDistanceCalculator.CommonUtils.Tasks;
+using CTeleport.AirportDistanceCalculator.Domain.Values;
 
-namespace AirportDistanceCalculator.Application
+namespace CTeleport.AirportDistanceCalculator.Application
 {
     /// <summary>Calculates distances</summary>
     public class DistanceCalculator

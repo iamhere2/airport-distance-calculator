@@ -1,9 +1,9 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using AirportDistanceCalculator.Application;
-using AirportDistanceCalculator.Domain.Values;
-using AirportDistanceCalculator.RemoteServices;
+using CTeleport.AirportDistanceCalculator.Application;
+using CTeleport.AirportDistanceCalculator.Domain.Values;
+using CTeleport.AirportDistanceCalculator.RemoteServices;
 using Polly.Registry;
 using Xunit;
 
